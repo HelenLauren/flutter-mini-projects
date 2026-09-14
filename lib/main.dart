@@ -21,8 +21,26 @@ class ProfileApp extends StatelessWidget {
           title: const Text('Cartão de Perfil Interativo'),
           backgroundColor: Colors.blueGrey,
         ),
-        body: const Center(
-          child: Text('Bem-vindo!'),
+        body: Container(
+          // Adiciona um espaçamento interno de 16 pixels em todos os lados.
+          padding: const EdgeInsets.all(16.0),
+          // Alinha o conteúdo no centro.
+          alignment: Alignment.center,
+          child: Column(
+            // Organiza os widgets em uma coluna.
+            mainAxisAlignment: MainAxisAlignment.center, // Centraliza a coluna verticalmente.
+            children: const [
+              // O Text é o widget para exibir texto.
+              Text(
+                'Nome do Usuário',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Desenvolvedor(a) Flutter em treinamento',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            ],
+          ),
         ),
       ),
     );

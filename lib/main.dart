@@ -6,36 +6,39 @@ void main() {
   runApp(const ProfileApp());
 }
 
-// Nosso widget principal. Ele é Stateless porque, por enquanto, não guarda nenhum estado.
-class ProfileApp extends StatelessWidget {
+class ProfileApp extends StatefulWidget {
   const ProfileApp({super.key});
 
   @override
+  State<ProfileApp> createState() => _ProfileAppState();
+}
+
+class _ProfileAppState extends State<ProfileApp> {
+  // Variável de estado: guarda a informação que pode mudar.
+  // O underscore (_) a torna privada para esta classe.
+  String _displayedName = 'Nome do Usuário';
+
+  @override
   Widget build(BuildContext context) {
-    // MaterialApp é o widget que nos dá a base de um app (temas, navegação, etc.).
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // Scaffold é o "esqueleto" de uma tela. Ele nos dá a AppBar (barra superior) e o body (corpo).
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Cartão de Perfil Interativo'),
           backgroundColor: Colors.blueGrey,
         ),
         body: Container(
-          // Adiciona um espaçamento interno de 16 pixels em todos os lados.
           padding: const EdgeInsets.all(16.0),
-          // Alinha o conteúdo no centro.
           alignment: Alignment.center,
           child: Column(
-            // Organiza os widgets em uma coluna.
-            mainAxisAlignment: MainAxisAlignment.center, // Centraliza a coluna verticalmente.
-            children: const [
-              // O Text é o widget para exibir texto.
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Agora, este Text usa a nossa variável de estado.
               Text(
-                'Nome do Usuário',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                _displayedName, // Usa a variável de estado
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              Text(
+              const Text(
                 'Desenvolvedor(a) Flutter em treinamento',
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),

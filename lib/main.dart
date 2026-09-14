@@ -15,8 +15,16 @@ class ProfileApp extends StatefulWidget {
 
 class _ProfileAppState extends State<ProfileApp> {
   // Variável de estado: guarda a informação que pode mudar.
-  // O underscore (_) a torna privada para esta classe.
   String _displayedName = 'Nome do Usuário';
+
+  // 1. Crie o controller.
+  final TextEditingController _nameController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +43,22 @@ class _ProfileAppState extends State<ProfileApp> {
             children: [
               // Agora, este Text usa a nossa variável de estado.
               Text(
-                _displayedName, // Usa a variável de estado
+                _displayedName,
                 style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const Text(
                 'Desenvolvedor(a) Flutter em treinamento',
                 style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              // Adicione um espaçamento
+              const SizedBox(height: 30),
+              // O widget para entrada de texto.
+              TextField(
+                controller: _nameController, // Conecta o controller ao TextField.
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Digite seu nome',
+                ),
               ),
             ],
           ),

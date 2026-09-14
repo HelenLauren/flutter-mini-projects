@@ -17,16 +17,18 @@ class _ProfileAppState extends State<ProfileApp> {
   // Variável de estado: guarda a informação que pode mudar.
   String _displayedName = 'Nome do Usuário';
 
-  // 1. Crie o controller.
+  // Controller para gerenciar o campo de texto.
   final TextEditingController _nameController = TextEditingController();
 
   // Função que atualiza o nome.
   void _updateName() {
-    // setState() diz ao Flutter: "O estado mudou, por favor, reconstrua a UI!"
-    setState(() {
-      // Lê o texto do controller e atualiza a variável de estado.
-      _displayedName = _nameController.text;
-    });
+    if (_nameController.text.trim().isNotEmpty) {
+      setState(() {
+        _displayedName = _nameController.text.trim();
+      });
+      _nameController.clear();
+      FocusScope.of(context).unfocus(); // Fecha o teclado após atualizar
+    }
   }
 
   @override
@@ -39,43 +41,127 @@ class _ProfileAppState extends State<ProfileApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Cartão de Perfil Interativo'),
-          backgroundColor: Colors.blueGrey,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blueGrey,
+          primary: Colors.blueGrey.shade700,
         ),
-        body: Container(
-          padding: const EdgeInsets.all(16.0),
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Agora, este Text usa a nossa variável de estado.
-              Text(
-                _displayedName,
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const Text(
-                'Desenvolvedor(a) Flutter em treinamento',
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              // Adicione um espaçamento
-              const SizedBox(height: 30),
-              // O widget para entrada de texto.
-              TextField(
-                controller: _nameController, // Conecta o controller ao TextField.
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Digite seu nome',
+        useMaterial3: true,
+      ),
+      home: Scaffold(
+        backgroundColor: Colors.blueGrey.shade50,
+        appBar: AppBar(
+          title: const Text(
+            'Cartão de Perfil Interativo',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.blueGrey.shade700,
+          foregroundColor: Colors.white,
+          elevation: 2,
+        ),
+        body: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
+            child: ConstrainedBox(
+              // Limita a largura máxima para manter tudo coeso e proporcional em qualquer tela
+              constraints: const BoxConstraints(maxWidth: 380),
+              child: Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Avatar decorativo simples
+                      CircleAvatar(
+                        radius: 42,
+                        backgroundColor: Colors.blueGrey.shade100,
+                        child: Icon(
+                          Icons.person_rounded,
+                          size: 50,
+                          color: Colors.blueGrey.shade700,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Nome exibido (reativo ao estado)
+                      Text(
+                        _displayedName,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+
+                      // Subtítulo / Cargo
+                      Text(
+                        'Desenvolvedor(a) em treinamento',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      const Divider(height: 36, thickness: 1),
+
+                      // Campo de entrada de texto
+                      TextField(
+                        controller: _nameController,
+                        onSubmitted: (_) => _updateName(),
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.badge_outlined),
+                          labelText: 'Digite seu novo nome',
+                          hintText: 'Ex: Helen Lauren',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey.shade50,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 14,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Botão de ação com tamanho proporcional e consistente
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: ElevatedButton.icon(
+                          onPressed: _updateName,
+                          icon: const Icon(Icons.check_rounded, size: 20),
+                          label: const Text(
+                            'Atualizar Nome',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blueGrey.shade700,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 1,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 20),
-              // O botão que aciona a ação.
-              ElevatedButton(
-                onPressed: _updateName, // Chama nossa função quando pressionado.
-                child: const Text('Atualizar Nome'),
-              ),
-            ],
+            ),
           ),
         ),
       ),

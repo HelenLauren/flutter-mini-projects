@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Importe o provider
 import 'detalhes_receita_screen.dart';
-import 'receita_model.dart'; // Importe o modelo que criamos
+import 'favoritas_provider.dart'; // Importe nosso novo provider
+import 'receita_model.dart';
 
 // Dados fictícios para nosso catálogo
 final List<Receita> DADOS_RECEITAS = [
@@ -18,10 +20,17 @@ final List<Receita> DADOS_RECEITAS = [
     modoDePreparo: 'Cozinhe a massa e misture.',
     imageUrl: 'URL_DA_IMAGEM_MACARRAO',
   ),
+  // Adicione mais receitas se quiser
 ];
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    // Envolvemos nosso app com o ChangeNotifierProvider
+    ChangeNotifierProvider(
+      create: (context) => FavoritasProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -53,10 +62,20 @@ class ListaReceitasScreen extends StatelessWidget {
             margin: const EdgeInsets.all(10),
             child: ListTile(
               leading: CircleAvatar(
+                // backgroundImage: NetworkImage(receita.imageUrl), // Descomente se tiver URLs
                 child: Text(receita.id.toUpperCase()),
               ),
               title: Text(receita.titulo),
               subtitle: const Text('Clique para ver detalhes'),
+              trailing: Consumer<FavoritasProvider>(
+                builder: (ctx, favoritasProvider, child) {
+                  final isFav = favoritasProvider.isFavorita(receita.id);
+                  return Icon(
+                    isFav ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.red,
+                  );
+                },
+              ),
               onTap: () {
                 // Ação de navegação
                 Navigator.push(

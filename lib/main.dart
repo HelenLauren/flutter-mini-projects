@@ -20,6 +20,15 @@ class _ProfileAppState extends State<ProfileApp> {
   // 1. Crie o controller.
   final TextEditingController _nameController = TextEditingController();
 
+  // Função que atualiza o nome.
+  void _updateName() {
+    // setState() diz ao Flutter: "O estado mudou, por favor, reconstrua a UI!"
+    setState(() {
+      // Lê o texto do controller e atualiza a variável de estado.
+      _displayedName = _nameController.text;
+    });
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -59,6 +68,12 @@ class _ProfileAppState extends State<ProfileApp> {
                   border: OutlineInputBorder(),
                   labelText: 'Digite seu nome',
                 ),
+              ),
+              const SizedBox(height: 20),
+              // O botão que aciona a ação.
+              ElevatedButton(
+                onPressed: _updateName, // Chama nossa função quando pressionado.
+                child: const Text('Atualizar Nome'),
               ),
             ],
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'detalhes_receita_screen.dart';
 import 'receita_model.dart'; // Importe o modelo que criamos
 
 // Dados fictícios para nosso catálogo
@@ -56,6 +57,15 @@ class ListaReceitasScreen extends StatelessWidget {
               ),
               title: Text(receita.titulo),
               subtitle: const Text('Clique para ver detalhes'),
+              onTap: () {
+                // Ação de navegação
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetalhesReceitaScreen(receita: receita),
+                  ),
+                );
+              },
             ),
           );
         },
